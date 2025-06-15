@@ -31,7 +31,7 @@ const Contact: React.FC = () => {
 
   const socialLinks = [
     { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/pratyushmohanty01/', label: 'LinkedIn' },
   ];
 
   return (

@@ -1,21 +1,21 @@
-import React from 'react';
-import { Award, Users, Camera, Calendar } from 'lucide-react';
+import React from "react";
+import { Award, Users, Camera, Calendar } from "lucide-react";
 
 const About: React.FC = () => {
   const stats = [
-    { icon: Camera, value: '500+', label: 'Photographs' },
-    { icon: Users, value: '50+', label: 'Clients' },
-    { icon: Award, value: '3', label: 'Awards' },
-    { icon: Calendar, value: '3+', label: 'Years' },
+    { icon: Camera, value: "500+", label: "Photographs" },
+    { icon: Users, value: "50+", label: "Clients" },
+    { icon: Award, value: "3", label: "Awards" },
+    { icon: Calendar, value: "3+", label: "Years" },
   ];
 
   const skills = [
-    'Portrait Photography',
-    'Landscape Photography', 
-    'Street Photography',
-    'Adobe Lightroom',
-    'Adobe Photoshop',
-    'Film Photography'
+    "Portrait Photography",
+    "Landscape Photography",
+    "Street Photography",
+    "Adobe Lightroom",
+    "Adobe Photoshop",
+    "Film Photography",
   ];
 
   return (
@@ -28,26 +28,37 @@ const About: React.FC = () => {
               ABOUT
             </h2>
             <div className="w-24 h-px bg-white mb-12"></div>
-            
+
             <div className="space-y-8 text-gray-300 font-light leading-relaxed">
               <p className="text-lg">
-                I am a dedicated photographer with over three years of experience capturing 
-                the essence of human emotion and the beauty of natural landscapes. My work 
-                focuses on creating timeless images that tell compelling stories.
+                I’m at the very start of my photography journey, but I’m deeply
+              passionate about capturing moments, stories, and emotions through
+              my lens. Photography lets me see the world in a unique way — from
+              the small details we often miss, to the grand stories that unfold
+              all around us.
               </p>
-              
+                
               <p className="text-lg">
-                Specializing in portrait, landscape, and street photography, I believe in 
-                the power of visual storytelling to connect people and preserve moments 
-                that matter. Each photograph is carefully composed to reveal the authentic 
-                character of its subject.
+                It’s my way of freezing a feeling, a memory, a
+              piece of life — and letting it live on forever. As an active
+              member of the Media Club in my college, I get the opportunity to
+              shoot all kinds of events — from concerts and workshops to
+              ceremonies — using advanced equipment like DSLRs and gimbals.
               </p>
-              
               <p className="text-lg">
-                Currently seeking opportunities to expand my professional experience through 
-                internships and collaborative projects with established photographers and 
-                creative agencies.
+              Each event is a new experience, a chance for me to learn, grow, and
+              become a better storyteller with my camera. I’m excited to keep
+              exploring this path and developing my craft. I’m open to
+              opportunities — whether it’s internships, collaborations, or
+              freelance projects — that allow me to bring stories to life
+              through my photos. 
               </p>
+              <p className="text-lg">
+              Photography isn’t just a hobby for me; it’s a
+              way to connect, to express myself, and to show the world how I see
+              it.
+              </p>
+
             </div>
 
             {/* Skills */}
@@ -92,8 +103,12 @@ const About: React.FC = () => {
                   className="text-center border border-gray-800 p-8 hover:border-gray-700 transition-colors duration-500"
                 >
                   <stat.icon className="h-6 w-6 text-white mx-auto mb-4" />
-                  <div className="text-2xl font-light text-white mb-2">{stat.value}</div>
-                  <div className="text-sm text-gray-400 font-light tracking-wide uppercase">{stat.label}</div>
+                  <div className="text-2xl font-light text-white mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-gray-400 font-light tracking-wide uppercase">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
