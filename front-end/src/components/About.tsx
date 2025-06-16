@@ -1,11 +1,9 @@
 import React from "react";
-import { Award, Users, Camera, Calendar } from "lucide-react";
+import {Camera, Calendar } from "lucide-react";
 
 const About: React.FC = () => {
   const stats = [
     { icon: Camera, value: "500+", label: "Photographs" },
-    { icon: Users, value: "50+", label: "Clients" },
-    { icon: Award, value: "3", label: "Awards" },
     { icon: Calendar, value: "3+", label: "Years" },
   ];
 
@@ -61,28 +59,6 @@ const About: React.FC = () => {
 
             </div>
 
-            {/* Skills */}
-            <div className="mt-16">
-              <h3 className="text-xl font-light text-white mb-8 tracking-wide uppercase">
-                Technical Skills
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                {skills.map((skill) => (
-                  <div
-                    key={skill}
-                    className="text-gray-400 font-light text-sm tracking-wide py-2 border-b border-gray-800"
-                  >
-                    {skill}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-16">
-              <button className="inline-flex items-center text-sm font-light text-white border border-white/30 px-8 py-4 hover:bg-white hover:text-black transition-all duration-500 tracking-wider uppercase">
-                Download Resume
-              </button>
-            </div>
           </div>
 
           {/* Photo and Stats */}
@@ -112,11 +88,27 @@ const About: React.FC = () => {
                 </div>
               ))}
             </div>
+
+            <div className="mt-16">
+              <h3 className="text-xl font-light text-white mb-8 tracking-wide uppercase">
+                Technical Skills
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                {skills.map((skill) => (
+                  <div
+                    key={skill}
+                    className="text-gray-400 font-light text-sm tracking-wide py-2 border-b border-gray-800"
+                  >
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 };
-
 export default About;
+
