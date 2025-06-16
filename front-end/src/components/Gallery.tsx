@@ -11,7 +11,7 @@ const Gallery: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5050/api/images')
+    fetch('https://photography-portfolio-z5yx.onrender.com/api/images')
       .then((res) => res.json()) 
       .then((data) => {
         setImages(data);

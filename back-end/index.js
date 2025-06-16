@@ -1,4 +1,5 @@
 console.log("🚀 Starting backend...");
+
 const express = require("express");
 const { google } = require("googleapis");
 const cors = require("cors");
@@ -32,7 +33,11 @@ const auth = new google.auth.GoogleAuth({
 
 // Define port and base API once at startup
 const PORT = process.env.PORT || 5050;
-const BASE_API = process.env.BASE_API || `http://localhost:${PORT}`;
+const BASE_API = process.env.BASE_API;
+
+if (!BASE_API) {
+  throw new Error("BASE_API environment variable is not set.");
+}
 
 app.get("/api/images", async (req, res) => {
   console.log("🔍 /api/images endpoint hit");
@@ -66,7 +71,7 @@ app.get("/api/images", async (req, res) => {
   }
 });
 
-// NEW ENDPOINT: Proxy for individual image files
+// Proxy for individual image files
 app.get("/api/image/:id", async (req, res) => {
   const fileId = req.params.id;
   console.log(`🖼️ /api/image/${fileId} endpoint hit for image proxy`);
@@ -105,6 +110,7 @@ app.get("/api/image/:id", async (req, res) => {
   }
 });
 
+// Health check
 app.get("/ping", (req, res) => {
   console.log("✅ Ping received.");
   res.send("pong.");
@@ -112,5 +118,5 @@ app.get("/ping", (req, res) => {
 
 // Start the server
 app.listen(PORT, () =>
-  console.log(`Backend server running on http://localhost:${PORT}`)
+  console.log(`🚀 Backend server running on port ${PORT}`)
 );
