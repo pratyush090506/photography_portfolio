@@ -7,31 +7,32 @@ require("dotenv").config();
 
 const app = express();
 
+// Allowed frontend origins
 const allowedOrigins = [
   "http://localhost:5173",
   "https://pratyush-photography.netlify.app",
 ];
 
-// CORS configuration
+// Enable CORS
 app.use(
-  cors({ 
+  cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
-    }
+    },
   })
 );
 
-// Google Drive setup
-const auth = new google.auth.GoogleAuth({ 
-  keyFile: "credentials.json", 
-  scopes: ["https://www.googleapis.com/auth/drive.readonly"] 
+// Google Drive Auth setup
+const auth = new google.auth.GoogleAuth({
+  keyFile: "credentials.json",
+  scopes: ["https://www.googleapis.com/auth/drive.readonly"],
 });
 
-// Define port and base API once at startup
+// Load ENV variables
 const PORT = process.env.PORT || 5050;
 const BASE_API = process.env.BASE_API;
 
@@ -39,67 +40,75 @@ if (!BASE_API) {
   throw new Error("BASE_API environment variable is not set.");
 }
 
+const folders = {
+  Nature: process.env.NATURE_FOLDER_ID,
+  Portraits: process.env.PORTRAIT_FOLDER_ID,
+  Events: process.env.EVENTS_FOLDER_ID,
+};
+
+// API to get sectioned images
 app.get("/api/images", async (req, res) => {
   console.log("🔍 /api/images endpoint hit");
 
   try {
     const authClient = await auth.getClient();
-    console.log("✅ Authenticated with Google API");
-
     const drive = google.drive({ version: "v3", auth: authClient });
 
-    // List files in specified folder
-    const folderId = process.env.GDRIVE_FOLDER_ID;
-    const response = await drive.files.list({ 
-      q: `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`,
-      fields: "files(id, name, webContentLink, mimeType)" 
-    });
+    const sectionedImages = {};
 
-    console.log("📁 Files fetched:", response.data.files);
+    for (const [section, folderId] of Object.entries(folders)) {
+      const response = await drive.files.list({
+        q: `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`,
+        fields: "files(id, name, mimeType)",
+      });
 
-    const files = response.data.files.map((file) => ({
-      id: file.id,
-      name: file.name,
-      url: `${BASE_API}/api/image/${file.id}`,
-      mimeType: file.mimeType,
-    }));
+      sectionedImages[section] = response.data.files.map((file) => ({
+        id: file.id,
+        name: file.name,
+        url: `${BASE_API}/api/image/${file.id}`,
+        mimeType: file.mimeType,
+      }));
 
-    res.json(files);
+      console.log(`📂 ${section}: ${sectionedImages[section].length} files`);
+    }
+
+    res.json(sectionedImages);
   } catch (err) {
-    console.error("❌ Failed to fetch images!", err);
+    console.error("❌ Failed to fetch sectioned images!", err);
     res.status(500).json({ error: "Failed to fetch images" });
   }
 });
 
-// Proxy for individual image files
+// Proxy endpoint to stream each image file
 app.get("/api/image/:id", async (req, res) => {
   const fileId = req.params.id;
-  console.log(`🖼️ /api/image/${fileId} endpoint hit for image proxy`);
+  console.log(`🖼️ /api/image/${fileId} endpoint hit`);
 
   try {
     const authClient = await auth.getClient();
     const drive = google.drive({ version: "v3", auth: authClient });
 
-    // Get file metadata to determine mimeType
-    const fileMetadata = await drive.files.get({ 
-      fileId: fileId, fields: "mimeType, name" 
+    // Get the file's MIME type
+    const fileMetadata = await drive.files.get({
+      fileId,
+      fields: "mimeType, name",
     });
+
     const mimeType = fileMetadata.data.mimeType;
 
-    // Fetch the actual image content
+    // Stream the file contents
     const response = await drive.files.get(
-      { fileId: fileId, alt: "media" },
+      { fileId, alt: "media" },
       { responseType: "stream" }
     );
 
     res.setHeader("Content-Type", mimeType);
+
     response.data
-      .on("end", () => console.log(`✅ Stream for ${fileId} ended.`))
+      .on("end", () => console.log(`✅ Finished streaming ${fileId}`))
       .on("error", (err) => {
-        console.error(`❌ Error streaming file ${fileId}:`, err);
-        if (!res.headersSent) {
-          res.status(500).send("Error streaming file.");
-        }
+        console.error(`❌ Stream error for ${fileId}:`, err);
+        if (!res.headersSent) res.status(500).send("Stream error");
       })
       .pipe(res);
   } catch (err) {
@@ -112,8 +121,8 @@ app.get("/api/image/:id", async (req, res) => {
 
 // Health check
 app.get("/ping", (req, res) => {
-  console.log("✅ Ping received.");
-  res.send("pong.");
+  console.log("✅ Ping received");
+  res.send("pong");
 });
 
 // Start the server

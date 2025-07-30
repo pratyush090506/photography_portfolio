@@ -4,7 +4,7 @@ import {Camera, Calendar } from "lucide-react";
 const About: React.FC = () => {
   const stats = [
     { icon: Camera, value: "500+", label: "Photographs" },
-    { icon: Calendar, value: "3+", label: "Years" },
+    { icon: Calendar, value: "1+", label: "Years" },
   ];
 
   const skills = [
