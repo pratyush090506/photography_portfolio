@@ -17,21 +17,33 @@ const Gallery: React.FC = () => {
 
   // Auto-import all images
   useEffect(() => {
-const portraits = import.meta.glob('../assets/images/portrait/*.{jpg,png}', { eager: true });
-const travel = import.meta.glob('../assets/images/travel/*.{jpg,png}', { eager: true });
-const landscape = import.meta.glob('../assets/images/landscape/*.{jpg,png}', { eager: true });
-const events = import.meta.glob('../assets/images/events/*.{jpg,png}', { eager: true });
+    const portraits = import.meta.glob(
+      "../assets/images/portrait/*.{jpg,png}",
+      { eager: true }
+    );
+    const travel = import.meta.glob("../assets/images/travel/*.{jpg,png}", {
+      eager: true,
+    });
+    const landscape = import.meta.glob(
+      "../assets/images/landscape/*.{jpg,png}",
+      { eager: true }
+    );
+    const events = import.meta.glob("../assets/images/events/*.{jpg,png}", {
+      eager: true,
+    });
 
-
-    const formatImages = (images: Record<string, unknown>, section: string): ImageData[] =>
-      Object.entries(images).map(([path], i) => {
+    const formatImages = (
+      images: Record<string, unknown>,
+      section: string
+    ): ImageData[] =>
+      Object.entries(images).map(([path, module], i) => {
         const parts = path.split("/");
         const filename = parts[parts.length - 1];
         const name = filename.split(".")[0].replace(/[-_]/g, " ");
         return {
           id: `${section}-${i}`,
           name,
-          url: new URL(path, import.meta.url).href,
+          url: (module as { default: string }).default, // ✅ this is the actual image URL
         };
       });
 
@@ -47,12 +59,17 @@ const events = import.meta.glob('../assets/images/events/*.{jpg,png}', { eager: 
     setLoaded((prev) => ({ ...prev, [id]: true }));
   };
 
-  const fixedSections = ["Portraits","Travel", "Landscape", "Events"];
+  const fixedSections = ["Portraits", "Travel", "Landscape", "Events"];
   const images = imagesBySection[selectedSection] || [];
 
   return (
-    <div id="gallery" className="p-6 min-h-screen bg-black text-white space-y-12">
-      <h2 className="text-3xl font-semibold text-gray-100 mb-6 text-center">Gallery</h2>
+    <div
+      id="gallery"
+      className="p-6 min-h-screen bg-black text-white space-y-12"
+    >
+      <h2 className="text-3xl font-semibold text-gray-100 mb-6 text-center">
+        Gallery
+      </h2>
 
       {/* Section Tabs */}
       <div className="flex justify-center gap-6 mb-8">
@@ -99,11 +116,15 @@ const events = import.meta.glob('../assets/images/events/*.{jpg,png}', { eager: 
                 </div>
               )}
               {/* Watermark */}
-              <p className="text-xs text-center text-gray-400 mt-2">© Pratyush Mohanty</p>
+              <p className="text-xs text-center text-gray-400 mt-2">
+                © Pratyush Mohanty
+              </p>
             </div>
           ))
         ) : (
-          <p className="text-gray-400 col-span-full text-center">No images found in this section.</p>
+          <p className="text-gray-400 col-span-full text-center">
+            No images found in this section.
+          </p>
         )}
       </div>
     </div>
