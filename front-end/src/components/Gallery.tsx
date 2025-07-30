@@ -17,10 +17,10 @@ const Gallery: React.FC = () => {
 
   // Auto-import all images
   useEffect(() => {
-    const portraits = import.meta.glob('/src/assets/images/portrait/*.{jpg,png}', { eager: true });
-    const travel = import.meta.glob('/src/assets/images/travel/*.{jpg,png}', { eager: true });
-    const landscape = import.meta.glob('/src/assets/images/landscape/*.{jpg,png}', { eager: true });
-    const events = import.meta.glob('/src/assets/images/events/*.{jpg,png}', { eager: true });
+const portraits = import.meta.glob('../assets/images/portrait/*.{jpg,png}', { eager: true });
+const travel = import.meta.glob('../assets/images/travel/*.{jpg,png}', { eager: true });
+const landscape = import.meta.glob('../assets/images/landscape/*.{jpg,png}', { eager: true });
+const events = import.meta.glob('../assets/images/events/*.{jpg,png}', { eager: true });
 
 
     const formatImages = (images: Record<string, unknown>, section: string): ImageData[] =>
